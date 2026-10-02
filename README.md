@@ -1,8 +1,10 @@
 # Mini Project: Deteksi Tanda Tangan pada Ijazah
 
-Nama: Fabyan Aktrinaldi
+Nama : Fabyan Aktrinaldi
 
-NIM: F1G124029 (Kelas A)
+NIM  : F1G124029 
+
+Kelas: A
 
 Tugas Pertemuan 6 mata kuliah Pengolahan Citra Digital.
 Program ini mendeteksi apakah area tanda tangan pejabat (Rektor) pada citra ijazah
