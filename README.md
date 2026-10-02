@@ -1,5 +1,8 @@
 # Mini Project: Deteksi Tanda Tangan pada Ijazah
 
+Nama: Fabyan Aktrinaldi
+NIM: F1G124029 (Kelas A)
+
 Tugas Pertemuan 6 mata kuliah Pengolahan Citra Digital.
 Program ini mendeteksi apakah area tanda tangan pejabat (Rektor) pada citra ijazah
 **ada** (`SIGNATURE PRESENT`) atau **tidak ada** (`SIGNATURE ABSENT`)
@@ -34,10 +37,11 @@ dan menganggap pola latar sebagai foreground.
 
 ```
 miniproject_ttd/
-├── data/             # taruh citra ijazah (.jpg/.png) di sini
+├── data/             # taruh citra ijazah (.jpg/.png) di sini (kosong di repo)
 ├── output/           # dibuat otomatis: gambar tiap tahap + hasil.csv
 ├── main.py
 ├── requirements.txt
+├── .gitignore
 └── README.md
 ```
 
@@ -48,7 +52,8 @@ miniproject_ttd/
    ```
    pip install -r requirements.txt
    ```
-3. Letakkan citra ijazah di folder `data/`.
+3. Folder `data/` sengaja dikosongkan di repo ini (citra ijazah tidak di-upload).
+   Letakkan 9 citra ijazah (.jpg/.png) ke dalam folder `data/` sebelum menjalankan program.
 4. Jalankan dari dalam folder `miniproject_ttd`:
    ```
    python main.py
@@ -74,12 +79,17 @@ Total 54 sampel uji.
 | Global threshold (T = 127) | 52 / 54 | 96,3% |
 | Otsu | 54 / 54 | 100% |
 
-Global threshold salah pada dua citra:
+Global threshold salah pada dua citra, keduanya pada sampel tanda tangan (seharusnya PRESENT, terbaca ABSENT):
 
-- `02_LowContrast`: tinta tidak cukup gelap sehingga hampir semua goresan jatuh di atas T = 127 dan rasio foreground hanya sekitar 0,27%.
-- `03_Blurred`: goresan yang kabur menjadi pudar dan terputus, jadi komponen terbesarnya tidak cukup panjang.
+| Citra | Rasio foreground | Lebar komponen terbesar | Penyebab |
+|---|---|---|---|
+| `02_LowContrast` | 0,27% | 3% | Tinta tidak cukup gelap, hampir semua goresan jatuh di atas T = 127. Kedua syarat gagal. |
+| `03_Blurred` | 2,14% | 35% | Goresan yang kabur menjadi terputus. Rasio lolos, tetapi komponen terbesarnya kurang dari 40% lebar crop. |
 
-Otsu benar di semua kasus karena nilai ambangnya menyesuaikan histogram tiap crop.
+Otsu benar di semua kasus karena nilai ambangnya menyesuaikan histogram tiap crop,
+dibantu penjaga kontras yang mencegah area kosong terbaca sebagai tinta.
+Perlu dicatat, penjaga ini hanya dipasang pada Otsu, jadi perbandingan kedua metode
+tidak sepenuhnya setara.
 
 ## Analisis
 
@@ -105,3 +115,5 @@ ketika kondisi pencahayaan dan kualitas citra berubah-ubah.
 - Koordinat crop ditentukan manual dengan `cv2.selectROI` pada citra yang sudah diputar (ukuran 3506 x 2481 piksel).
   Jika memakai citra dengan ukuran atau tata letak berbeda, sesuaikan `ROI_TTD` dan `ROI_ABSENT` di `main.py`.
 - Aturan dan parameter dikalibrasi dari 9 citra uji ini, jadi belum tentu berlaku untuk jenis dokumen lain.
+- Semua sampel PRESENT berasal dari satu tanda tangan yang sama (dengan degradasi berbeda),
+  sehingga pengujian ini belum mewakili variasi tanda tangan yang lain.
